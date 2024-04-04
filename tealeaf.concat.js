@@ -10417,8 +10417,9 @@ TLT.addService("domCapture", function(core) {
         if (captureCrossDomainFrame) {
             if (window.self !== window.top) {
                 window.addEventListener('message', (event) => {
+                    console.log('LISTENER FROM FRAME');
                     if (event.data === 'captureDOM') {
-                        const capturedObj = this.captureDOM(window.document, {});
+                        const capturedObj = this.captureDOM(window.document ?? window.contentDocument, {});
                         window.postMessage(capturedObj, mainOrigin);
                     }
                 });
@@ -10986,6 +10987,11 @@ TLT.addService("domCapture", function(core) {
                     } catch (e) {
                         console.log('TLT getFrames error:');
                         console.log(e);
+                        getIframeDOMCapture(sourceIframe, iframeDoc, options).then(res => {
+                            console.log('FRAME CAPTURE');
+                            console.log(iframeCapture);
+                        }).catch(err => console.log('FRAME ERROR', err));
+
                     }
                 }
             }
